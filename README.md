@@ -18,7 +18,7 @@ Xbox 普通震动只含轻重两路强度。扳机预设由用户选定。音频
 2. 运行 `dualsense-wireless-enhance.exe`。在 Overview 的 Game feedback 中选模式。原生增强和 Xbox 兼容需要 [usbip-win2](https://github.com/vadimgrn/usbip-win2/releases/tag/v.0.9.8.1)。出现双重输入时，在工具内启用 [HidHide](https://github.com/nefarius/HidHide/releases) 来隐藏实体手柄。安装驱动后按安装器提示重启。
 3. 确认 Input device 显示预期的设备后再启动游戏。用原生增强时，如果 Steam Input 接管了手柄，可在该游戏的 Steam 属性中关闭 Steam Input，再重新打开游戏。若游戏启动时未看到所选设备，也先确认模式和设备状态，再重启游戏。
 4. Game feedback 会显示是否收到了游戏震动、原生触觉或扳机指令。测试普通震动、左右握把可使用 Overview 的 Rumble test、Haptic L 和 Haptic R。用 Adaptive triggers 调整扳机阻力，用 Haptics & audio 调整触觉强度。蓝牙直通下的原生输出由游戏直接发送，工具面板显示的是经过工具的信号。
-5. 在 Profiles & games 中可按游戏的可执行文件保存配置。自动识别仅提供候选模式，可以手动指定。切换模式后若游戏不再识别手柄，先退出游戏再切换。选择 Bluetooth direct 会撤销当前虚拟输入，实体设备会重新可见。
+5. 在 Profiles & games 中可按游戏的可执行文件保存配置。自动识别仅提供候选模式，可以手动指定。切换模式后若游戏不再识别手柄，先退出游戏再切换。选择 Bluetooth direct 会撤销当前虚拟输入，实体设备会重新可见。要完全交还反馈控制，可在该模式下点击 Release controller and quit。
 
 首版的反馈模式继承了上游的传输实现。每款游戏能提供的反馈取决于版本、输入模式和设置。可先用《最后生还者 Part I》对照蓝牙直连和虚拟 DualSense，再用支持 Xbox 震动的游戏测试兼容模式。反馈触感和跨游戏覆盖需要在实体手柄上验证。
 

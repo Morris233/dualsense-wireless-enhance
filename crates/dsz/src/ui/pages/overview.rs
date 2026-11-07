@@ -270,6 +270,11 @@ impl App {
                 }
             });
             muted(ui, crate::i18n::tr("Choose the mode before starting the game."));
+            if status.active.is_none() && profile.virtual_out.kind == VirtualKind::Off {
+                if button(ui, crate::i18n::tr("Release controller and quit")).clicked() {
+                    crate::tray::quit();
+                }
+            }
             let active = match status.active {
                 Some(kind) => crate::i18n::tr(kind.label()),
                 None if status.want.is_some_and(|kind| kind != VirtualKind::Off) => crate::i18n::tr("Virtual controller pending"),
@@ -283,7 +288,7 @@ impl App {
                 muted(ui, crate::i18n::tr("Physical input is visible too. Check HidHide if input doubles."));
             }
             if status.active.is_some() {
-                let received = crate::i18n::tr("Received");
+                let received = crate::i18n::tr("Received since connection");
                 let waiting = crate::i18n::tr("Waiting for signal");
                 stat(ui, crate::i18n::tr("Game rumble"), if rumble_seen { received } else { waiting });
                 if status.active == Some(VirtualKind::DualSense) {

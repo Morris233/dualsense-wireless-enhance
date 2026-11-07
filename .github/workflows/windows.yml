@@ -20,10 +20,14 @@ jobs:
         run: cargo +stable-x86_64-pc-windows-msvc test --workspace --locked
       - name: Build
         run: cargo +stable-x86_64-pc-windows-msvc build --release --locked -p dsz
+      - name: Package executable and notices
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/licenses | Out-Null
+          Copy-Item target/release/dualsense-wireless-enhance.exe dist/
+          Copy-Item LICENSE,vendor/opus/COPYING,vendor/eframe/LICENSE-MIT,vendor/eframe/LICENSE-APACHE,crates/dsz/assets/OpenController-LICENSE,crates/ds-proto/DS4-Sound-Link-LICENSE dist/licenses/
       - uses: actions/upload-artifact@v4
         with:
           name: dualsense-wireless-enhance-windows-x64
-          path: |
-            target/release/dualsense-wireless-enhance.exe
-            LICENSE
+          path: dist/
           if-no-files-found: error

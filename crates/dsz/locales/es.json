@@ -781,5 +781,7 @@
   "Waiting for signal": "Esperando señal",
   "Native haptics": "Háptica nativa",
   "Native triggers": "Gatillos nativos",
-  "Capturing output audio": "Capturando el audio de salida"
+  "Capturing output audio": "Capturando el audio de salida",
+  "Release controller and quit": "Liberar el mando y salir",
+  "Received since connection": "Recibida desde la conexión"
 }
