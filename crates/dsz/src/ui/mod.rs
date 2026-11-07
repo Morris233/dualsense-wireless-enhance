@@ -250,9 +250,9 @@ impl App {
             controller_view::logo(ui.painter(), r);
             ui.vertical(|ui| {
                 ui.add_space(-2.0);
-                // Wordmark: "DSZ" with the Z in the lightbar's accent blue.
+                // Use the lightbar accent for the second half of the wordmark.
                 let mut mark = egui::text::LayoutJob::default();
-                for (s, c) in [("DS", TEXT), ("Z", ACCENT)] {
+                for (s, c) in [("DS", TEXT), ("WE", ACCENT)] {
                     mark.append(
                         s,
                         0.0,
@@ -266,7 +266,7 @@ impl App {
                 }
                 ui.label(mark);
                 ui.add_space(-7.0);
-                ui.label(RichText::new("DualSense Zen").size(12.0).color(MUTED));
+                ui.label(RichText::new("Wireless Enhance").size(12.0).color(MUTED));
             });
         });
         ui.add_space(22.0);

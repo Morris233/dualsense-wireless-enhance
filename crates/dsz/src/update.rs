@@ -8,11 +8,11 @@
 //!
 //! DSZ never downloads a program itself: an app that fetches an exe and
 //! starts it is what antivirus heuristics call a downloader (Kaspersky
-//! flagged 0.3.8, which did). "Download" opens the release's `dsz.exe` in
+//! flagged 0.3.8, which did). "Download" opens the release's `dualsense-wireless-enhance.exe` in
 //! the browser, which scans and saves it like any download. DSZ then finds
 //! it in the Downloads folder (or is shown where it is), checks it against
 //! the SHA-256 GitHub publishes for the file, and on "Install and restart"
-//! renames the running exe to `dsz.exe.old` (Windows allows renaming a
+//! renames the running exe to `dualsense-wireless-enhance.exe.old` (Windows allows renaming a
 //! running exe, not overwriting it), copies the new one into its place,
 //! and starts it with `--updated`. The new process waits for this one to
 //! quit and deletes the old file.
@@ -26,17 +26,17 @@ use parking_lot::Mutex;
 
 use crate::engine::Engine;
 
-const LATEST: &str = "https://api.github.com/repos/MaximumFreak/dsz/releases/latest";
-pub const RELEASES: &str = "https://github.com/MaximumFreak/dsz/releases";
+const LATEST: &str = "https://api.github.com/repos/Morris233/dualsense-wireless-enhance/releases/latest";
+pub const RELEASES: &str = "https://github.com/Morris233/dualsense-wireless-enhance/releases";
 /// The release asset that is the app.
-const ASSET: &str = "dsz.exe";
+const ASSET: &str = "dualsense-wireless-enhance.exe";
 /// First check a little after startup, out of the way of controllers
 /// connecting; then once a day.
 const FIRST_CHECK: Duration = Duration::from_secs(20);
 const EVERY: Duration = Duration::from_secs(24 * 3600);
 /// How long to watch the Downloads folder after "Download".
 const WATCH_FOR: Duration = Duration::from_secs(30 * 60);
-const NO_CHECKSUM: &str = "GitHub published no checksum for this download, so it can't be checked. Replace dsz.exe by hand instead.";
+const NO_CHECKSUM: &str = "GitHub published no checksum for this download, so it can't be checked. Replace dualsense-wireless-enhance.exe by hand instead.";
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Release {
@@ -160,7 +160,7 @@ pub fn check_in_background(wake: impl Fn() + Send + 'static) {
 }
 
 fn latest() -> Result<Release, String> {
-    let dir = std::env::temp_dir().join("DSZ");
+    let dir = std::env::temp_dir().join(crate::APP_TITLE);
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let file = dir.join("latest-release.json");
     let _ = std::fs::remove_file(&file);
@@ -355,7 +355,7 @@ fn swap_in(r: &Release, file: &Path) -> Result<(), String> {
     let _ = std::fs::remove_file(&old);
     let cant = |e: std::io::Error| {
         format!(
-            "DSZ can't replace its own file in {} ({e}). Replace dsz.exe there by hand with {}.",
+            "DSZ can't replace its own file in {} ({e}). Replace dualsense-wireless-enhance.exe there by hand with {}.",
             exe.parent().unwrap_or(Path::new("")).display(),
             file.display()
         )
@@ -418,13 +418,13 @@ mod tests {
 
     #[test]
     fn reads_the_release_and_its_checksum() {
-        let json = r#"{"tag_name":"v0.3.8","html_url":"https://github.com/MaximumFreak/dsz/releases/tag/v0.3.8",
+        let json = r#"{"tag_name":"v0.3.8","html_url":"https://github.com/Morris233/dualsense-wireless-enhance/releases/tag/v0.3.8",
             "assets":[{"name":"other.zip","browser_download_url":"https://example.invalid/x"},
-            {"name":"dsz.exe","browser_download_url":"https://github.com/MaximumFreak/dsz/releases/download/v0.3.8/dsz.exe",
+            {"name":"dualsense-wireless-enhance.exe","browser_download_url":"https://github.com/Morris233/dualsense-wireless-enhance/releases/download/v0.3.8/dualsense-wireless-enhance.exe",
              "size":9294336,"digest":"sha256:ef4fea4dcb25a386e63ebb4e50f55c89a36a79b4ee02d1652d425325fa4c26c2"}]}"#;
         let r = parse(json).unwrap();
         assert_eq!(r.version, "0.3.8");
-        assert!(r.url.ends_with("/v0.3.8/dsz.exe"));
+        assert!(r.url.ends_with("/v0.3.8/dualsense-wireless-enhance.exe"));
         assert_eq!(r.size, Some(9294336));
         assert_eq!(r.sha256.unwrap()[..2], [0xef, 0x4f]);
         assert!(parse(r#"{"tag_name":"v1","assets":[]}"#).is_none(), "no exe, no update");
@@ -443,7 +443,7 @@ mod tests {
     fn checks_the_file_against_the_release() {
         let dir = std::env::temp_dir().join("dsz-update-test");
         std::fs::create_dir_all(&dir).unwrap();
-        let f = dir.join("dsz.exe");
+        let f = dir.join("dualsense-wireless-enhance.exe");
         std::fs::write(&f, b"MZ fake exe").unwrap();
         let mut r = Release {
             version: "9.9.9".into(),
@@ -471,8 +471,8 @@ mod tests {
     #[test]
     fn old_exe_sits_beside_the_new_one() {
         assert_eq!(
-            old_path(Path::new(r"C:\Apps\dsz.exe")),
-            PathBuf::from(r"C:\Apps\dsz.exe.old")
+            old_path(Path::new(r"C:\Apps\dualsense-wireless-enhance.exe")),
+            PathBuf::from(r"C:\Apps\dualsense-wireless-enhance.exe.old")
         );
     }
 }

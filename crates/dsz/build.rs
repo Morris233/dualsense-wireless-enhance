@@ -1,6 +1,6 @@
 // Build the vendored libopus (controller-speaker audio) into the exe, and
 // embed the Windows version resource and icon, so Windows shows
-// "DSZ - DualSense Zen" (Task Manager, startup apps, tray settings,
+// "DualSense Wireless Enhance" (Task Manager, startup apps, tray settings,
 // Explorer) instead of the exe name.
 use std::path::{Path, PathBuf};
 
@@ -88,11 +88,11 @@ fn embed_resources(out: &Path) {
     }
     let mut res = winresource::WindowsResource::new();
     res.set_icon(ico.to_str().unwrap())
-        .set("FileDescription", "DSZ - DualSense Zen")
-        .set("ProductName", "DSZ - DualSense Zen")
-        .set("CompanyName", "DSZ")
-        .set("InternalName", "dsz")
-        .set("OriginalFilename", "dsz.exe")
+        .set("FileDescription", "DualSense Wireless Enhance")
+        .set("ProductName", "DualSense Wireless Enhance")
+        .set("CompanyName", "DualSense Wireless Enhance contributors")
+        .set("InternalName", "dualsense-wireless-enhance")
+        .set("OriginalFilename", "dualsense-wireless-enhance.exe")
         .set("LegalCopyright", "MIT License");
     // A missing Windows SDK only costs the version info, not the build.
     if let Err(e) = res.compile() {

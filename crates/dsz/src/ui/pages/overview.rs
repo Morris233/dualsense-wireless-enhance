@@ -5,7 +5,7 @@ use std::time::Instant;
 use eframe::egui::{self, RichText};
 
 use crate::device::{Device, HapticPulse, Link};
-use crate::profile::Profile;
+use crate::profile::{AudioSource, Profile, VirtualKind};
 use crate::ui::controller_view::{self, View};
 use crate::ui::theme::*;
 use crate::ui::widgets::*;
@@ -46,6 +46,9 @@ impl App {
                 self.engine.profile_name_for(d)
             ),
         );
+
+        self.feedback_modes(ui, d);
+        ui.add_space(12.0);
 
         let avail = ui.available_width();
         let wide = avail > 900.0;
@@ -237,6 +240,65 @@ impl App {
         }
         ui.add_space(12.0);
         self.tips(ui);
+    }
+
+    fn feedback_modes(&self, ui: &mut egui::Ui, d: &Device) {
+        let current = self.engine.profile_name_for(d);
+        let profile = self.engine.profiles.get_or_first(&current);
+        let status = d.virt.status.lock().clone();
+        let (rumble_seen, haptics_seen, triggers_seen) = {
+            let feedback = d.feedback.lock();
+            let game = &feedback.game;
+            (game.rumble_logged, game.haptics_seen, game.left_trigger.is_some() || game.right_trigger.is_some())
+        };
+        let audio_capture = self.engine.audio.status.lock().clone();
+        card(ui, crate::i18n::tr("Game feedback"), "", |ui| {
+            ui.horizontal_wrapped(|ui| {
+                for (name, label) in [
+                    ("DualSense", "Native enhancement"),
+                    ("Xbox", "Xbox compatibility"),
+                    ("Bluetooth Direct", "Bluetooth direct"),
+                ] {
+                    if ui.add_enabled(!current.eq_ignore_ascii_case(name), egui::Button::new(crate::i18n::tr(label))).clicked() {
+                        if !self.engine.profiles.exists(name) {
+                            if let Some(starter) = Profile::starter_set().into_iter().find(|p| p.name == name) {
+                                self.engine.profiles.add(starter);
+                            }
+                        }
+                        self.engine.set_device_profile(d, name);
+                    }
+                }
+            });
+            muted(ui, crate::i18n::tr("Choose the mode before starting the game."));
+            let active = match status.active {
+                Some(kind) => crate::i18n::tr(kind.label()),
+                None if status.want.is_some_and(|kind| kind != VirtualKind::Off) => crate::i18n::tr("Virtual controller pending"),
+                None => crate::i18n::tr("Physical controller"),
+            };
+            stat(ui, crate::i18n::tr("Input device"), active);
+            if let Some(error) = status.error.as_deref() {
+                ui.label(RichText::new(error).color(WARN));
+            }
+            if status.active.is_some() && !status.hidden {
+                muted(ui, crate::i18n::tr("Physical input is visible too. Check HidHide if input doubles."));
+            }
+            if status.active.is_some() {
+                let received = crate::i18n::tr("Received");
+                let waiting = crate::i18n::tr("Waiting for signal");
+                stat(ui, crate::i18n::tr("Game rumble"), if rumble_seen { received } else { waiting });
+                if status.active == Some(VirtualKind::DualSense) {
+                    stat(ui, crate::i18n::tr("Native haptics"), if haptics_seen { received } else { waiting });
+                    stat(ui, crate::i18n::tr("Native triggers"), if triggers_seen { received } else { waiting });
+                }
+            }
+            if d.is_bluetooth() && profile.haptics.enabled && profile.haptics.source == AudioSource::SystemAudio {
+                stat(ui, crate::i18n::tr("Audio to vibration"), if audio_capture.running {
+                    crate::i18n::tr("Capturing output audio")
+                } else {
+                    crate::i18n::tr("Waiting for signal")
+                });
+            }
+        });
     }
 
     fn preview_color(&mut self, p: &Profile, input: &ds_proto::InputState, d: &Device) -> [u8; 3] {

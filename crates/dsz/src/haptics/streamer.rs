@@ -398,6 +398,7 @@ pub fn run(engine: &Arc<Engine>, device: &Arc<Device>) {
                 if let Some(w) = game.take(src.as_ref(), WINDOW) {
                     if w.peak > 1e-3 && !game_haptics_logged {
                         game_haptics_logged = true;
+                        device.feedback.lock().game.haptics_seen = true;
                         log::info!("the game sends haptics as audio (actuator peak {:.0} %)", w.peak * 100.0);
                     }
                     let (heavy, light) = to_rumble.convert(&w.haptics);
@@ -577,6 +578,7 @@ pub fn run(engine: &Arc<Engine>, device: &Arc<Device>) {
                 if let Some(w) = game.take(src.as_ref(), win) {
                     if w.peak > 1e-3 && !game_haptics_logged {
                         game_haptics_logged = true;
+                        device.feedback.lock().game.haptics_seen = true;
                         log::info!("the game sends haptics as audio (actuator peak {:.0} %)", w.peak * 100.0);
                     }
                     if vo.game_haptics {

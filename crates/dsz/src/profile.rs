@@ -1032,12 +1032,13 @@ impl Profile {
 
     /// The profiles a fresh install starts with, from `defaults/`: "Xbox"
     /// (a virtual Xbox 360 pad, touchpad as mouse) and "DualSense" (a
-    /// virtual DualSense with game haptics, PS opens the Game Bar). A long
-    /// press on Mute switches between them.
+    /// virtual DualSense with game haptics, PS opens the Game Bar) and
+    /// "Bluetooth Direct" (physical input). Mute switches the virtual presets.
     pub fn starter_set() -> Vec<Profile> {
         [
             include_str!("../defaults/Xbox.json"),
             include_str!("../defaults/DualSense.json"),
+            include_str!("../defaults/Bluetooth Direct.json"),
         ]
         .iter()
         .map(|t| serde_json::from_str(t).expect("shipped default profile"))
@@ -1360,7 +1361,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("dsz-replace-test-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         let store = ProfileStore::load(&dir);
-        assert_eq!(store.names(), ["Xbox", "DualSense"]);
+        assert_eq!(store.names(), ["Xbox", "DualSense", "Bluetooth Direct"]);
         let rev = store.revision();
         store.replace_all(vec![Profile::named("Racing"), Profile::named("xbox")]);
         assert_eq!(store.names(), ["Racing", "xbox"]);
@@ -1396,7 +1397,7 @@ mod tests {
     fn shipped_defaults() {
         let set = Profile::starter_set();
         let names: Vec<&str> = set.iter().map(|p| p.name.as_str()).collect();
-        assert_eq!(names, ["Xbox", "DualSense"]);
+        assert_eq!(names, ["Xbox", "DualSense", "Bluetooth Direct"]);
         assert_eq!(set[0].virtual_out.kind, VirtualKind::Xbox360);
         assert_eq!(set[0].touchpad.mode, TouchMode::Mouse);
         assert_eq!(set[1].virtual_out.kind, VirtualKind::DualSense);
@@ -1404,7 +1405,13 @@ mod tests {
             && m.action == Action::Xbox { button: XboxPadButton::Guide }));
         // The files hold only what differs from the defaults; the rest is
         // filled in from them.
-        for p in &set {
+        let direct = &set[2];
+        assert_eq!(direct.virtual_out.kind, VirtualKind::Off);
+        assert_eq!(direct.touchpad.mode, TouchMode::Passthrough);
+        assert_eq!(direct.haptics.source, AudioSource::None);
+        assert_eq!(direct.triggers, Triggers::default());
+        assert!(direct.mappings.is_empty());
+        for p in &set[..2] {
             assert!(p
                 .mappings
                 .iter()

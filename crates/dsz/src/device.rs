@@ -103,6 +103,7 @@ pub struct GameState {
     pub reports: u64,
     /// The first rumble of this session was logged.
     pub rumble_logged: bool,
+    pub haptics_seen: bool,
 }
 
 #[derive(Debug, Default)]
@@ -477,6 +478,10 @@ impl Device {
     pub fn set_game_rumble(&self, heavy: u8, light: u8) {
         let mut f = self.feedback.lock();
         f.game.rumble = (heavy != 0 || light != 0).then_some((heavy, light));
+        if f.game.rumble.is_some() && !f.game.rumble_logged {
+            f.game.rumble_logged = true;
+            log::info!("game rumble received (heavy {heavy}, light {light})");
+        }
         drop(f);
         self.kick();
     }

@@ -7,7 +7,7 @@ license.workspace = true
 build = "build.rs"
 
 [[bin]]
-name = "dsz"
+name = "dualsense-wireless-enhance"
 path = "src/main.rs"
 
 [dependencies]

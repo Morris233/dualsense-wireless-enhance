@@ -1,11 +1,11 @@
-//! Portable mode: settings beside dsz.exe.
+//! Portable mode: settings beside the executable.
 //!
 //! A `dsz-data` folder next to the exe holds the settings, profiles and
-//! log in place of `%APPDATA%\DSZ`; making the folder by hand is enough.
+//! log in place of `%APPDATA%\DualSense Wireless Enhance`; making the folder by hand is enough.
 //! Settings switches between the two: it copies everything over (a trial
 //! copy first, so a folder that can't be written is caught while nothing
 //! has changed), quits, copies again what quitting saved, swaps the
-//! folders, and starts DSZ again with `--moved`.
+//! folders, and restarts the app with `--moved`.
 
 use std::io;
 use std::path::{Path, PathBuf};
@@ -13,7 +13,7 @@ use std::sync::Arc;
 
 use crate::engine::Engine;
 
-pub const FOLDER: &str = "dsz-data";
+pub const FOLDER: &str = "dualsense-wireless-enhance-data";
 
 /// `dsz-data` beside the exe, used when it exists.
 pub fn folder() -> Option<PathBuf> {
@@ -25,7 +25,7 @@ pub fn roaming() -> PathBuf {
     std::env::var_os("APPDATA")
         .map(PathBuf::from)
         .unwrap_or_else(|| std::env::current_dir().unwrap_or_default())
-        .join("DSZ")
+        .join(crate::APP_TITLE)
 }
 
 /// Whether `data_dir` is the portable folder.
@@ -151,7 +151,7 @@ mod tests {
     fn moves_there_and_back() {
         let root = std::env::temp_dir().join("dsz-portable-move-test");
         let _ = std::fs::remove_dir_all(&root);
-        let (roaming, exe_dir) = (root.join("Roaming").join("DSZ"), root.join("app"));
+        let (roaming, exe_dir) = (root.join("Roaming").join(crate::APP_TITLE), root.join("app"));
         let portable = exe_dir.join(FOLDER);
         std::fs::create_dir_all(roaming.join("profiles")).unwrap();
         std::fs::create_dir_all(&exe_dir).unwrap();

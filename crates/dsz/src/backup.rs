@@ -265,7 +265,7 @@ mod tests {
         let back = Backup::parse(&b.to_json().unwrap()).unwrap();
         assert_eq!(back, b);
         assert_eq!(back.settings.udp_port, 6970);
-        assert!(b.summary().starts_with("2 profiles and app settings"));
+        assert!(b.summary().starts_with("3 profiles and app settings"));
     }
 
     #[test]

@@ -1,0 +1,29 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Rust stable MSVC
+        run: rustup update stable-x86_64-pc-windows-msvc --no-self-update
+      - name: Test
+        run: cargo +stable-x86_64-pc-windows-msvc test --workspace --locked
+      - name: Build
+        run: cargo +stable-x86_64-pc-windows-msvc build --release --locked -p dsz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dualsense-wireless-enhance-windows-x64
+          path: |
+            target/release/dualsense-wireless-enhance.exe
+            LICENSE
+          if-no-files-found: error

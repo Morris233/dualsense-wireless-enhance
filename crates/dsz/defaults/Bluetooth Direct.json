@@ -1,0 +1,5 @@
+{
+  "name": "Bluetooth Direct",
+  "touchpad": { "mode": "Passthrough" },
+  "virtual": { "kind": "Off" }
+}

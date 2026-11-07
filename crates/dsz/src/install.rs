@@ -124,7 +124,7 @@ pub fn start(p: Package, wake: impl Fn() + Send + 'static) {
 
 fn run(p: Package, wake: &dyn Fn()) -> Result<(), String> {
     let rel = p.release();
-    let dir = std::env::temp_dir().join("DSZ");
+    let dir = std::env::temp_dir().join(crate::APP_TITLE);
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let file = dir.join(rel.file);
     let _ = std::fs::remove_file(&file);

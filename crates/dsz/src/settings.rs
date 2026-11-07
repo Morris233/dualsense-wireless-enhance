@@ -192,7 +192,7 @@ impl Default for Settings {
             hide_nodes: BTreeMap::new(),
             helper_nodes: BTreeMap::new(),
             audio_on_virtual: [false; 6],
-            check_updates: true,
+            check_updates: false,
             dsu_enabled: false,
         }
     }

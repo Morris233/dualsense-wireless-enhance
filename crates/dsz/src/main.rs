@@ -31,7 +31,7 @@ mod ui;
 mod update;
 mod virt;
 
-pub const APP_TITLE: &str = "DSZ - DualSense Zen";
+pub const APP_TITLE: &str = "DualSense Wireless Enhance";
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -73,7 +73,7 @@ fn main() {
         engine.start();
     }
     if updated {
-        engine.toast(crate::localized_format!("Updated to DSZ {}", "Atualizado para DSZ {}", "Actualizado a DSZ {}", env!("CARGO_PKG_VERSION")));
+        engine.toast(crate::localized_format!("Updated to {} {}", "Atualizado para {} {}", "Actualizado a {} {}", APP_TITLE, env!("CARGO_PKG_VERSION")));
     }
     if moved {
         engine.toast(crate::localized_format!("Settings are in {}", "As configurações estão em {}", "La configuración está en {}", engine.data_dir.display()));

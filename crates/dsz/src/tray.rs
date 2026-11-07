@@ -177,7 +177,7 @@ unsafe extern "system" fn wndproc(hwnd: HWND, msg: u32, wp: WPARAM, lp: LPARAM) 
 
 unsafe fn show_menu(hwnd: HWND) {
     let menu = CreatePopupMenu();
-    let show = wide(crate::i18n::tr("Open DSZ"));
+    let show = wide(crate::APP_TITLE);
     AppendMenuW(menu, MF_STRING, ID_SHOW, show.as_ptr());
     AppendMenuW(menu, MF_SEPARATOR, 0, null());
     let mut current = String::new();
@@ -236,7 +236,7 @@ pub fn start(engine: Arc<Engine>, on_show: impl Fn() + Send + Sync + 'static) {
     std::thread::Builder::new()
         .name("tray".into())
         .spawn(move || unsafe {
-            let class = wide("DSZTray");
+            let class = wide("DualSenseWirelessEnhanceTray");
             let hinst = GetModuleHandleW(null());
             let wc = WNDCLASSW {
                 style: 0,
@@ -277,7 +277,7 @@ pub fn start(engine: Arc<Engine>, on_show: impl Fn() + Send + Sync + 'static) {
             nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
             nid.uCallbackMessage = WM_TRAY;
             nid.hIcon = make_hicon();
-            set_tip(&mut nid, "DSZ");
+            set_tip(&mut nid, crate::APP_TITLE);
             Shell_NotifyIconW(NIM_ADD, &nid);
 
             // Update the tooltip with battery levels now and then.
@@ -287,7 +287,7 @@ pub fn start(engine: Arc<Engine>, on_show: impl Fn() + Send + Sync + 'static) {
                 if msg.message == WM_TIMER {
                     let devs = engine.device_list();
                     let tip = if devs.is_empty() {
-                        "DSZ — no controller".to_string()
+                        format!("{} — {}", crate::APP_TITLE, crate::i18n::tr("No controller"))
                     } else {
                         let parts: Vec<String> = devs
                             .iter()
@@ -299,7 +299,7 @@ pub fn start(engine: Arc<Engine>, on_show: impl Fn() + Send + Sync + 'static) {
                                 )
                             })
                             .collect();
-                        format!("DSZ — {}", parts.join(", "))
+                        format!("{} — {}", crate::APP_TITLE, parts.join(", "))
                     };
                     set_tip(&mut nid, &tip);
                     Shell_NotifyIconW(NIM_MODIFY, &nid);

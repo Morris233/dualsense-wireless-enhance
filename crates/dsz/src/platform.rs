@@ -164,7 +164,7 @@ pub fn bt_disconnect(mac: &str) -> bool {
 }
 
 const RUN_KEY: &str = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-const APP_VALUE: &str = "DSZ";
+const APP_VALUE: &str = crate::APP_TITLE;
 
 pub fn set_autostart(on: bool) -> bool {
     unsafe {
@@ -299,7 +299,7 @@ pub fn single_instance(wait: std::time::Duration) -> bool {
     let until = std::time::Instant::now() + wait;
     loop {
         unsafe {
-            let name = wide("Local\\DSZ.SingleInstance");
+            let name = wide("Local\\DualSenseWirelessEnhance.SingleInstance");
             let h = CreateMutexW(null(), 0, name.as_ptr());
             if h.is_null() {
                 return true;

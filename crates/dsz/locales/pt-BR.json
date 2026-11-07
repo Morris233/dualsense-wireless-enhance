@@ -768,5 +768,18 @@
   "Loudest": "Máximo",
   "Game haptics and speaker sound need a virtual DualSense.": "A háptica e o som do alto-falante do jogo precisam de um DualSense virtual.",
   "Game haptics and speaker sound need a virtual DualSense. Games with DualSense support switch to the \"{name}\" profile, so set them there.": "A háptica e o som do alto-falante do jogo precisam de um DualSense virtual. Jogos com suporte ao DualSense mudam para o perfil \"{name}\"; ajuste-os lá.",
-  "A game's own speaker sound plays with the \"{name}\" profile's volume and amplifier.": "O som do alto-falante do próprio jogo usa o volume e o amplificador do perfil \"{name}\"."
+  "A game's own speaker sound plays with the \"{name}\" profile's volume and amplifier.": "O som do alto-falante do próprio jogo usa o volume e o amplificador do perfil \"{name}\".",
+  "Native enhancement": "Modo nativo",
+  "Xbox compatibility": "Compatibilidade Xbox",
+  "Bluetooth direct": "Bluetooth direto",
+  "Choose the mode before starting the game.": "Escolha o modo antes de iniciar o jogo.",
+  "Virtual controller pending": "Aguardando controle virtual",
+  "Physical controller": "Controle físico",
+  "Input device": "Dispositivo de entrada",
+  "Physical input is visible too. Check HidHide if input doubles.": "A entrada física também está visível. Confira o HidHide se houver comandos duplicados.",
+  "Received": "Recebido",
+  "Waiting for signal": "Aguardando sinal",
+  "Native haptics": "Vibração tátil nativa",
+  "Native triggers": "Gatilhos nativos",
+  "Capturing output audio": "Capturando a saída de áudio"
 }
