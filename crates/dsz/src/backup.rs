@@ -331,7 +331,7 @@ mod tests {
         let saved_again = restore(&engine, &b).unwrap();
         assert_ne!(saved, saved_again, "a second restore keeps the first safety copy");
         assert_eq!(engine.settings.read().udp_port, 7001);
-        assert_eq!(engine.profiles.names(), ["Xbox", "DualSense", "Racing"]);
+        assert_eq!(engine.profiles.names(), ["Xbox", "DualSense", "Bluetooth Direct", "Racing"]);
         assert!(engine.profiles.exists(&engine.settings.read().default_profile));
         // What was there before the restore is kept.
         let before = read(&saved).unwrap();

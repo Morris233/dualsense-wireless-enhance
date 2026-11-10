@@ -137,10 +137,11 @@ mod tests {
         std::fs::write(from.join("settings.json"), "{}").unwrap();
         std::fs::write(from.join("profiles").join("p.json"), "[]").unwrap();
         // A stale half copy is replaced, not merged into.
-        std::fs::create_dir_all(root.join("dsz-data.part")).unwrap();
-        std::fs::write(root.join("dsz-data.part").join("stale"), "").unwrap();
+        let expected = root.join(format!("{FOLDER}.part"));
+        std::fs::create_dir_all(&expected).unwrap();
+        std::fs::write(expected.join("stale"), "").unwrap();
         let part = stage(&from, &to).unwrap();
-        assert_eq!(part, root.join("dsz-data.part"));
+        assert_eq!(part, expected);
         assert!(part.join("profiles").join("p.json").is_file());
         assert!(part.join("settings.json").is_file());
         assert!(!part.join("stale").exists());

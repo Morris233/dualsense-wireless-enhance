@@ -31,6 +31,7 @@ mod ui;
 mod update;
 mod virt;
 
+pub(crate) const APP_LOG_TARGET: &str = module_path!();
 pub const APP_TITLE: &str = "DualSense Wireless Enhance";
 
 fn main() {

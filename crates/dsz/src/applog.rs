@@ -45,7 +45,7 @@ fn clock() -> String {
 
 impl log::Log for Logger {
     fn enabled(&self, md: &log::Metadata) -> bool {
-        md.level() <= log::Level::Info || md.target().starts_with("dsz")
+        md.level() <= log::Level::Info || md.target().starts_with(crate::APP_LOG_TARGET)
     }
 
     fn log(&self, record: &log::Record) {
@@ -53,7 +53,7 @@ impl log::Log for Logger {
             return;
         }
         // Keep noisy dependency logs out.
-        if record.level() > log::Level::Warn && !record.target().starts_with("dsz") {
+        if record.level() > log::Level::Warn && !record.target().starts_with(crate::APP_LOG_TARGET) {
             return;
         }
         let line = LogLine {
