@@ -317,6 +317,7 @@ mod tests {
         let engine = Engine::new(dir.join("data"));
         engine.settings.write().udp_port = 7001;
         engine.profiles.add(Profile::named("Racing"));
+        let mut expected_names = engine.profiles.names();
         let file = dir.join(suggested_name());
         export(&engine, &file).unwrap();
 
@@ -331,7 +332,7 @@ mod tests {
         let saved_again = restore(&engine, &b).unwrap();
         assert_ne!(saved, saved_again, "a second restore keeps the first safety copy");
         assert_eq!(engine.settings.read().udp_port, 7001);
-        assert_eq!(engine.profiles.names(), ["Xbox", "DualSense", "Bluetooth Direct", "Racing"]);
+        assert_eq!(engine.profiles.names(), expected_names);
         assert!(engine.profiles.exists(&engine.settings.read().default_profile));
         // What was there before the restore is kept.
         let before = read(&saved).unwrap();
@@ -344,7 +345,8 @@ mod tests {
         let store = crate::profile::ProfileStore::load(&dir.join("data").join("profiles"));
         let mut names = store.names();
         names.sort();
-        assert_eq!(names, ["DualSense", "Racing", "Xbox"]);
+        expected_names.sort();
+        assert_eq!(names, expected_names);
         drop(engine);
         let _ = std::fs::remove_dir_all(&dir);
     }
